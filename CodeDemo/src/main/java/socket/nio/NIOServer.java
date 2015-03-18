@@ -19,7 +19,7 @@
 			// 获得一个ServerSocket通道
 			ServerSocketChannel serverChannel = ServerSocketChannel.open();
 			// 设置通道为非阻塞
-			serverChannel.configureBlocking(false);
+			serverChannel.configureBlocking(true);
 			// 将该通道对应的ServerSocket绑定到port端口
 			serverChannel.socket().bind(new InetSocketAddress(port));
 			// 获得一个通道管理器

@@ -9,7 +9,7 @@ import java.net.SocketTimeoutException;
 public class Client {
 	public static void main(String[] args) throws IOException {
 		//客户端请求与本机在20006端口建立TCP连接 
-		Socket client = new Socket("127.0.0.1", 20006);
+		Socket client = new Socket("127.0.0.1", 8080);
 		client.setSoTimeout(10000);
 		//获取键盘输入 
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -23,7 +23,7 @@ public class Client {
 			String str = input.readLine();
 			//发送数据到服务端  
 			out.println(str);
-			if("bye".equals(str)){
+			/*if("bye".equals(str)){
 				flag = false;
 			}else{
 				try{
@@ -33,7 +33,7 @@ public class Client {
 				}catch(SocketTimeoutException e){
 					System.out.println("Time out, No response");
 				}
-			}
+			}*/
 		}
 		input.close();
 		if(client != null){

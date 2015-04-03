@@ -25,7 +25,7 @@ public class TimeServer {
 					.childHandler(new ChildChannelHandler());
 			// 绑定端口，同步等待成势
 			ChannelFuture f = b.bind(port);
-			ChannelFuture f2 = b.bind(8081);
+//			ChannelFuture f2 = b.bind(8081);
 			// 等待服务端监听端口关闿
 			f.channel().closeFuture().sync();
 		} finally {

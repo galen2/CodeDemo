@@ -25,20 +25,15 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders.Values;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.multipart.Attribute;
-import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
-import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
-import io.netty.handler.codec.http.multipart.InterfaceHttpData;
-import io.netty.handler.codec.http.multipart.InterfaceHttpData.HttpDataType;
-import io.netty.util.CharsetUtil;
-
+import io.netty.handler.codec.http.QueryStringDecoder;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 public class HttpServerHandler extends ChannelHandlerAdapter {
@@ -56,32 +51,8 @@ public class HttpServerHandler extends ChannelHandlerAdapter {
             System.out.println("Uri:" + uri);
         }
 		
-		 if (request.getMethod() .equals("post")) { // 处理POST请求  
-	            HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(  
-	                    new DefaultHttpDataFactory(false), req);  
-	            InterfaceHttpData postData = decoder.getBodyHttpData("q"); // //  
-	                                                                        // 读取从客户端传过来的参数  
-	            String question = "";  
-	            if (postData.getHttpDataType() == HttpDataType.Attribute) {  
-	                Attribute attribute = (Attribute) postData;  
-	                question = attribute.getValue();  
-	                System.out.println("q:" + question);  
-	  
-	            }  
-	            if (question != null && !question.equals("")) {  
-	  
-	                HttpResponse res = new DefaultHttpResponse(HTTP_1_1, OK);  
-	                String data = "<html><body>你好，POST</body><html>";  
-	                ChannelBuffer content = ChannelBuffers.copiedBuffer(data,  
-	                        CharsetUtil.UTF_8);  
-	                res.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");  
-	                res.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");  
-	                setContentLength(res, content.readableBytes());  
-	                res.setContent(content);  
-	                sendHttpResponse(ctx, req, res);  
-	  
-	            }  
-	            
+		parseArgument(request);
+		
 	            
         if (msg instanceof HttpContent) {
             HttpContent content = (HttpContent) msg;
@@ -103,7 +74,26 @@ public class HttpServerHandler extends ChannelHandlerAdapter {
         }
 	        
 	}
+	
+	/**
+	 * 解析客户端请求 参数
+	 * @param request
+	 */
+	public void parseArgument(HttpRequest request){
+		 QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+	      Map<String, List<String>> params = queryStringDecoder.parameters();
+	      if (!params.isEmpty()) {
+	          for (Entry<String, List<String>> p : params.entrySet()) {
+	              String key = p.getKey();
+	              List<String> vals = p.getValue();
+	              for (String val : vals) {
+	                  System.out.println("PARAM: " + key + " = " + val + "\r\n");
+	              }
+	          }
+	      }
+	}
 
+	
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 		ctx.flush();

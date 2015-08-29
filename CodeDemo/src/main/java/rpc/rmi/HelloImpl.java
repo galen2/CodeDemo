@@ -12,6 +12,7 @@ public class HelloImpl extends UnicastRemoteObject implements IHello {
 	public String bodyName = "";
 	
     public HelloImpl() throws RemoteException {
+    	System.out.println("HelloImpl construtce create!!!!");
     }
 
     public String helloWorld() throws RemoteException {
@@ -20,8 +21,8 @@ public class HelloImpl extends UnicastRemoteObject implements IHello {
     }
 
     public String sayHelloToSomeBody(String someBodyName) throws RemoteException {
-    	System.out.println("helloWorld  success ");
+    	System.out.println("sayHelloToSomeBody  success ");
     	this.bodyName = someBodyName;
-        return "someBodyName";
+        return someBodyName;
     }
 }

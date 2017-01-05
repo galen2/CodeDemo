@@ -10,7 +10,7 @@ public class Client {
 	public static void main(String[] args) throws IOException {
 		//客户端请求与本机在20006端口建立TCP连接 
 		Socket client = new Socket("127.0.0.1", 8000);
-		client.setSoTimeout(10000);
+		client.setSoTimeout(1000);
 		//获取键盘输入 
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		//获取Socket的输出流，用来发送数据到服务端  
@@ -23,12 +23,15 @@ public class Client {
 			String str = input.readLine();
 			//发送数据到服务端  
 			out.println(str);
-			
+			input.close();
 			try{
 				//从服务器端接收数据有个时间限制（系统自设，也可以自己设置），超过了这个时间，便会抛出该异常
-				String echo = buf.readLine();
-				System.out.println(echo);
+				while(true){
+					String echo = buf.readLine();
+					System.out.println(echo);
+				}
 			}catch(SocketTimeoutException e){
+				e.printStackTrace();
 				System.out.println("Time out, No response");
 			}
 			

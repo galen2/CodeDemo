@@ -14,11 +14,20 @@ import javax.management.ObjectName;
  *
  */
 public class HelloAgent {
-
+	
 	Hello helloBean = new Hello();
 	MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 	public void init() {
 		try {
+//			StringBuilder param = new StringBuilder();
+//	        param.append("com.sun.management.jmxremote.port=9999").append(",");
+//	        param.append("com.sun.management.jmxremote.authenticate=false").append(",");
+//	        param.append("com.sun.management.jmxremote.ssl=false").append(",");
+//	        sun.management.Agent.premain(param.toString());
+//	        com.sun.management.jmxremote.authenticate=false
+//			System.setProperty("com.sun.management.jmxremote.port", "9999");
+//			System.setProperty("com.sun.management.jmxremote.authenticate", "false");
+//			System.setProperty("com.sun.management.jmxremote.ssl", "false");
 			ObjectName helloName = new ObjectName("FOO:name=HelloBean");
 			mbs.registerMBean(helloBean, helloName);
 		} catch (Exception e) {

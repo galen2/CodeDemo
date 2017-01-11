@@ -8,10 +8,13 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 /**
- * @Description在Java安装目录bin下面运行jconse	
- * @author liliangbing
- * @date 2017年1月5日
- *
+ * @Description在Java安装目录bin下面运行jconsole
+ * 
+ * 操作流程：
+ * 1、默认SSL证书导入导出逻辑，在客户端和服务端导入导出响应的证书文件；
+ * 2、由于客户端导入了服务端的证书，因此启动时候：
+ * jconsole -J-Djavax.net.ssl.trustStore=truststore  -J-Djavax.net.ssl.trustStorePassword=100200
+ * 3、参考官网说明http://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html
  */
 public class HelloAgent {
 	
@@ -19,15 +22,19 @@ public class HelloAgent {
 	MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 	public void init() {
 		try {
-//			StringBuilder param = new StringBuilder();
-//	        param.append("com.sun.management.jmxremote.port=9999").append(",");
-//	        param.append("com.sun.management.jmxremote.authenticate=false").append(",");
-//	        param.append("com.sun.management.jmxremote.ssl=false").append(",");
-//	        sun.management.Agent.premain(param.toString());
-//	        com.sun.management.jmxremote.authenticate=false
-//			System.setProperty("com.sun.management.jmxremote.port", "9999");
-//			System.setProperty("com.sun.management.jmxremote.authenticate", "false");
-//			System.setProperty("com.sun.management.jmxremote.ssl", "false");
+			/**
+			 * 也可以用启动时候加入格式，java -Dproperty=value。 java  -Dcom.sun.management.jmxremote.port=9999
+			 */
+			System.setProperty("com.sun.management.jmxremote.port", "9999");
+			System.setProperty("com.sun.management.jmxremote.authenticate", "true");
+			System.setProperty("com.sun.management.jmxremote.ssl", "true");
+			System.setProperty("javax.net.ssl.keyStore", "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/bin/kserver.keystore");
+			System.setProperty("javax.net.ssl.keyStoreType", "JKS");
+			System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+			System.setProperty("javax.net.ssl.trustStore", "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/bin/kserver.keystore");
+			System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+			System.setProperty("javax.net.ssl.trustStorePassword", "123456");
+			
 			ObjectName helloName = new ObjectName("FOO:name=HelloBean");
 			mbs.registerMBean(helloBean, helloName);
 		} catch (Exception e) {

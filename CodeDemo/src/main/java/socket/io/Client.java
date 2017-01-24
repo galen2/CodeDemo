@@ -21,32 +21,19 @@ public class Client {
 		while(flag){
 			System.out.print("输入信息：");
 			String str = input.readLine();
+			if("bye".equals(str)){
+				flag = false;
+			}
 			//发送数据到服务端  
 			out.println(str);
-			input.close();
+			System.out.println("发送到服务端信息："+str);
 			try{
-				//从服务器端接收数据有个时间限制（系统自设，也可以自己设置），超过了这个时间，便会抛出该异常
-				while(true){
-					String echo = buf.readLine();
-					System.out.println(echo);
-				}
+				String echo = buf.readLine();
+				System.out.println("接收到服务端信息:"+echo);
 			}catch(SocketTimeoutException e){
-				e.printStackTrace();
-				System.out.println("Time out, No response");
+				
 			}
 			
-			
-			/*if("bye".equals(str)){
-				flag = false;
-			}else{
-				try{
-					//从服务器端接收数据有个时间限制（系统自设，也可以自己设置），超过了这个时间，便会抛出该异常
-					String echo = buf.readLine();
-					System.out.println(echo);
-				}catch(SocketTimeoutException e){
-					System.out.println("Time out, No response");
-				}
-			}*/
 		}
 		input.close();
 		if(client != null){
